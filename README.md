@@ -5,7 +5,7 @@ CS 6376 Final Project
 Download zip from github  
 `$ pip install necessary libraries`
 
-`$ python3 cruisecontrol.py`
+`$ python3 main.py`
 
 Implementation was done on a linux machine using Python3.7
 
