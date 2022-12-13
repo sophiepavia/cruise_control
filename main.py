@@ -53,7 +53,7 @@ def motor_torque(omega, params={}):
     return np.clip(Tm * (1 - beta * (omega/omega_m - 1)**2), 0, None)
 
 #### SIMUALTION PLOTTING ####
-def simulate_plot(sys, t, y, label=None, t_hill=None, vref=25, linetype='r-', 
+def simulate_plot(sys, t, y, label=None, t_hill=None, vref=20, linetype='g-', 
                     subplots=None, legend=None):
     """"
     Simulation plot creation
@@ -162,12 +162,13 @@ cruise = ct.InterconnectedSystem(
 
 #### IMPLEMENTATION AND SIMULATION ####
 # Define the time and input vectors
-T = np.linspace(0, 25, 101)
+T = np.linspace(0, 25, 151)
 vref = 20 * np.ones(T.shape)
 gear = 4 * np.ones(T.shape)
 theta0 = np.zeros(T.shape)
 
 # Effect of a hill at t = 5 seconds
+subplots = [None, None]
 plt.figure()
 plt.suptitle('Response to change in road slope')
 theta_hill = np.array([
@@ -182,4 +183,10 @@ X0, U0 = ct.find_eqpt(
 
 t, y = ct.input_output_response(cruise, T, [vref, gear, theta_hill], X0)
 
-simulate_plot(cruise, t, y, t_hill=5)
+simulate_plot(cruise, t, y, t_hill=5, subplots=subplots)
+plt.show()
+
+#### TODO ####
+# reponse in changes of mass within the car?
+# other than PI controller? 
+# other forces against the car? 
