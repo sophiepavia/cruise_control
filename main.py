@@ -50,3 +50,38 @@ def motor_torque(omega, params={}):
     beta = params.get('beta', 0.4)          # peak engine rolloff
 
     return np.clip(Tm * (1 - beta * (omega/omega_m - 1)**2), 0, None)
+
+def simulate_plot(sys, t, y, label=None, t_hill=None, vref=20, linetype='r-', 
+                    subplots=None, legend=None):
+    """"
+    Simulation plot creation
+
+    Parameters:
+    sys (ct.Interconnected sysyem) : Interconnection of a set of 
+            input/output systems
+    t (array) : time values of output from ct.input_output_response
+    y (array) : response of the system from ct.input_output_response
+    t_hill (int): time at which hill occurs
+    vref (int): reference velocity 
+    linetype (string): line type for pyplots
+    subplots (array): plt.subplot(s)
+    legend (bool): true or false for legend apperance 
+
+    Returns:
+    subplot_axes (array) : plt.subplots(s)
+
+    """
+    
+
+# Define the input/output system for the vehicle
+    # NonLinearIOSytem
+    # vehcile_update: function that returns
+    # the state update function for the vehicle
+    # None: no function returns output as given state
+    # inputs: throttle, gear, slope
+    # outputs: updated velocity
+    # state: velocity
+    # dt: 0 (contiunous time system)
+vehicle = ct.NonlinearIOSystem(
+    vehicle_update, None, inputs=('u', 'gear', 'theta'), 
+                outputs=('v'), states=('v'), dt=0, name='vehicle')
