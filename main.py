@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from math import pi, sin
+from math import pi, sin, copysign
 import control as ct
 
 #### CONTROLLER DYNAMICS MODELING ####
@@ -20,6 +20,7 @@ def vehicle_update(t, x, u, params={}):
     # Get system parameters
     m = params.get('m', 1000.)              # vehicle mass, kg
     g = params.get('g', 9.8)                # gravitational constant, m/s^2
+    k = params.get('k', 0.01)               # coefficient of friction
     alpha = params.get(
         'alpha', [40, 25, 16, 12, 10])      # gear ratio / wheel radius
 
@@ -38,8 +39,14 @@ def vehicle_update(t, x, u, params={}):
     # force Fg = m*g*sin(theta)
     Fg = m * g * sin(theta)
 
+    # Friction is Fr = m g k sgn(v), where k is
+    # the coefficient of friction and sgn(v) is the sign of v (±1) or
+    # zero if v = 0.
+    sign = lambda x: copysign(1, x)         # define the sign() function to model sgn(v)
+    Fr  = m * g * k * sign(v)
+
     # Final acceleration on the car
-    Fd = Fg
+    Fd = Fg + Fr
     dv = (F - Fd) / m
 
     return dv
@@ -128,8 +135,9 @@ def simulate_plot(sys, t, y, label=None, t_hill=None, vref=20, linetype='g-',
 
 #### VEHICLE DECLARTION ####
 # Define the input/output system for the vehicle
-    # NonLinearIOSytem
-    # vehcile_update: function that returns
+    # NonLinearIOSytem (note modeled this way for easy of use
+    # actual system is a linear input/output system)
+    # vechile_update: function that returns
     # the state update function for the vehicle
     # None: no function returns output as given state
     # inputs: throttle, gear, slope
