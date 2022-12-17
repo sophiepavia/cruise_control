@@ -196,7 +196,7 @@ simulate_plot(cruise, t, y, t_hill=5, subplots=subplots)
 plt.show()
 
 # Higher Speed and Steeper slope eperiement
-T = np.linspace(0, 50, 101)
+T = np.linspace(0, 30, 101)
 vref = 55 * np.ones(T.shape)
 gear = 4 * np.ones(T.shape)
 theta_hill = np.array([
