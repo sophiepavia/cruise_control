@@ -171,10 +171,6 @@ cruise = ct.InterconnectedSystem(
     outlist = ('vehicle.v', 'vehicle.u'), outputs = ('v', 'u'))
 
 #### IMPLEMENTATION AND SIMULATION ####
-# Max and Min Speed 
-minSpeed = 0
-maxSpeed = 70
-
 # Define the time and input vectors
 T = np.linspace(0, 25, 151)
 vref = 35 * np.ones(T.shape)
