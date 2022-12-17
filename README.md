@@ -27,8 +27,11 @@ a cruise control simulation of a car on uneven grade
 
 ## Resources
 https://www.cis.upenn.edu/~alur/pcps.html
+
 https://www.collimator.ai/tutorials/optimal-cruise-control
+
 https://medium.com/@apollojain/building-a-cruise-controller-in-python-943d872879e2
+
 https://python-control.readthedocs.io/
 
 ## Link to Video
