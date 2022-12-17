@@ -3,8 +3,11 @@ CS 6376 Final Project
 
 ## Execution
 Download zip from github  
+
 `$ pip install matplotlib`
+
 `$ pip install numpy`
+
 `$ pip install control`
 
 `$ python3 main.py`
@@ -27,5 +30,8 @@ https://www.cis.upenn.edu/~alur/pcps.html
 https://www.collimator.ai/tutorials/optimal-cruise-control
 https://medium.com/@apollojain/building-a-cruise-controller-in-python-943d872879e2
 https://python-control.readthedocs.io/
+
+## Link to Video
+https://vanderbilt.zoom.us/rec/share/5LMm74l-65CoYNHKz5c61xY2u36GY4bcZ3NhQkQBpgOj_xnCKJaxvAEoog2ds5EA.ZnEbXo49q0_TBPiH?startTime=1671284634000
 
 
