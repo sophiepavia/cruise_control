@@ -232,6 +232,45 @@ plt.xlabel('Time [s]');
 
 plt.show()
 
+#### PI VALUE EXPERIEMENTS ####
+# reponse in changes of Kp and Ki within the vehicle
+plt.figure()
+plt.suptitle('Response to change in road slope')
 
-# other than PI controller? 
-# other forces against the car? 
+subplots = [None, None]
+linecolor = ['green', 'blue', 'red']
+handles = []
+
+for i in range(3):
+    Kp = [0.9, 0.7, 0.5]                        # proportional gain
+    Ki = [0.5, 0.3, 0.1]                        # integral gain
+    controller = ct.tf2io(ct.TransferFunction([Kp[i], Ki[i]], [1, 0.01*Ki[i]/Kp[i]]),
+                name='control', inputs='u', outputs='y')
+
+    #connects vehicle I/O system and controller
+    cruise = ct.InterconnectedSystem(
+        (vehicle, controller), name='cruise',
+        connections = [('control.u', '-vehicle.v'), ('vehicle.u', 'control.y')],
+        inplist = ('control.u', 'vehicle.gear', 'vehicle.theta'), inputs = ('vref', 'gear', 'theta'),
+        outlist = ('vehicle.v', 'vehicle.u'), outputs = ('v', 'u'))
+    
+    X0, U0 = ct.find_eqpt( cruise, [vref[0], 0], [vref[0], gear[0], theta_hill[0]],
+    iu=[1, 2], y0=[vref[0], 0], iy=[0])
+
+    t, y = ct.input_output_response(cruise, T, [vref, gear, theta_hill], X0)
+
+    subplots = simulate_plot(cruise, t, y, t_hill=5, subplots=subplots,
+                           linetype=linecolor[i][0] + '-')
+    handles.append(mlines.Line2D([], [], color=linecolor[i], linestyle='-',
+                                 label="Kp = %f, Ki = %f" % (Kp[i],Ki[i])))
+
+# Labels for plots
+plt.sca(subplots[0])
+plt.ylabel('Speed [m/s]')
+plt.legend(handles=handles, frameon=False, loc='lower right');
+
+plt.sca(subplots[1])
+plt.ylabel('Throttle')
+plt.xlabel('Time [s]');
+
+plt.show()
