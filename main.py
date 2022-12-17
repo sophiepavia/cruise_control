@@ -10,6 +10,7 @@ def vehicle_update(t, x, u, params={}):
 
     Parameters:
     x (array) : System state, car velocity in m/s
+            where minSpeed = 0, maxSpeed = 70
     u (array) : System input, [throttle, gear, road_slope], 
             where throttle is a float between 0 and 1, gear is an 
             integer between 1 and 5, and road_slope is in rad.
@@ -60,7 +61,7 @@ def motor_torque(omega, params={}):
     return np.clip(Tm * (1 - beta * (omega/omega_m - 1)**2), 0, None)
 
 #### SIMUALTION PLOTTING ####
-def simulate_plot(sys, t, y, label=None, t_hill=None, vref=20, linetype='g-', 
+def simulate_plot(sys, t, y, label=None, t_hill=None, vref=35, linetype='g-', 
                     subplots=None, legend=None):
     """"
     Simulation plot creation
@@ -169,20 +170,24 @@ cruise = ct.InterconnectedSystem(
     outlist = ('vehicle.v', 'vehicle.u'), outputs = ('v', 'u'))
 
 #### IMPLEMENTATION AND SIMULATION ####
+# Max and Min Speed 
+minSpeed = 0
+maxSpeed = 70
+
 # Define the time and input vectors
 T = np.linspace(0, 25, 151)
-vref = 20 * np.ones(T.shape)
+vref = 35 * np.ones(T.shape)
 gear = 4 * np.ones(T.shape)
-theta0 = np.zeros(T.shape)
+theta_hill = np.array([
+    0 if t <= 5 else
+    4./180. * pi * (t-5) if t <= 6 else
+    4./180. * pi for t in T])
 
 # Effect of a hill at t = 5 seconds
 subplots = [None, None]
 plt.figure()
 plt.suptitle('Response to change in road slope')
-theta_hill = np.array([
-    0 if t <= 5 else
-    4./180. * pi * (t-5) if t <= 6 else
-    4./180. * pi for t in T])
+
 
 # Plot the velocity response and find equillbrium
 X0, U0 = ct.find_eqpt(
