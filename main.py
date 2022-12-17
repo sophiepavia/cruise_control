@@ -178,12 +178,12 @@ gear = 4 * np.ones(T.shape)
 theta_hill = np.array([
     0 if t <= 5 else
     4./180. * pi * (t-5) if t <= 6 else
-    4./180. * pi for t in T])
+    4./180. * pi for t in T]) #4 degress hill 
 
 # Effect of a hill at t = 5 seconds
 subplots = [None, None]
 plt.figure()
-plt.suptitle('Response to change in road slope')
+plt.suptitle('Response to change in road slope: Speed = 35 mph, Hill Grade = 4 degrees')
 
 # Plot the velocity response and find equillbrium
 X0, U0 = ct.find_eqpt(
@@ -195,10 +195,41 @@ t, y = ct.input_output_response(cruise, T, [vref, gear, theta_hill], X0)
 simulate_plot(cruise, t, y, t_hill=5, subplots=subplots)
 plt.show()
 
+# Higher Speed and Steeper slope eperiement
+T = np.linspace(0, 50, 101)
+vref = 55 * np.ones(T.shape)
+gear = 4 * np.ones(T.shape)
+theta_hill = np.array([
+    0 if t <= 5 else
+    7./180. * pi * (t-5) if t <= 6 else
+    7./180. * pi for t in T]) #7 degrees hill 
+
+# Effect of a hill at t = 5 seconds
+subplots = [None, None]
+plt.figure()
+plt.suptitle('Response to change in road slope: Speed = 55 mph, Hill Grade = 7 degrees')
+
+# Plot the velocity response and find equillbrium
+X0, U0 = ct.find_eqpt(
+    cruise, [vref[0], 0], [vref[0], gear[0], theta_hill[0]],
+    iu=[1, 2], y0=[vref[0], 0], iy=[0])
+
+t, y = ct.input_output_response(cruise, T, [vref, gear, theta_hill], X0)
+
+simulate_plot(cruise, t, y, t_hill=5, vref=55, subplots=subplots)
+plt.show()
+
 #### MASS EXPERIMENTS ####
 # reponse in changes of mass within the vehicle
+T = np.linspace(0, 25, 151)
+vref = 35 * np.ones(T.shape)
+gear = 4 * np.ones(T.shape)
+theta_hill = np.array([
+    0 if t <= 5 else
+    4./180. * pi * (t-5) if t <= 6 else
+    4./180. * pi for t in T]) #4 degrees hill 
 plt.figure()
-plt.suptitle('Response to change in road slope')
+plt.suptitle('Response to change in road slope: Mass Experiements')
 
 subplots = [None, None]
 linecolor = ['green', 'blue', 'red']
@@ -231,7 +262,7 @@ plt.show()
 #### PI VALUE EXPERIEMENTS ####
 # reponse in changes of Kp and Ki within the vehicle
 plt.figure()
-plt.suptitle('Response to change in road slope')
+plt.suptitle('Response to change in road slope: PI Experiements')
 
 subplots = [None, None]
 linecolor = ['green', 'blue', 'red']
