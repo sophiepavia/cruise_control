@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.lines as mlines
 from math import pi, sin, copysign
 import control as ct
 
@@ -188,7 +189,6 @@ subplots = [None, None]
 plt.figure()
 plt.suptitle('Response to change in road slope')
 
-
 # Plot the velocity response and find equillbrium
 X0, U0 = ct.find_eqpt(
     cruise, [vref[0], 0], [vref[0], gear[0], theta_hill[0]],
@@ -199,7 +199,39 @@ t, y = ct.input_output_response(cruise, T, [vref, gear, theta_hill], X0)
 simulate_plot(cruise, t, y, t_hill=5, subplots=subplots)
 plt.show()
 
-#### TODO ####
-# reponse in changes of mass within the car?
+#### MASS EXPERIMENTS ####
+# reponse in changes of mass within the vehicle
+plt.figure()
+plt.suptitle('Response to change in road slope')
+
+subplots = [None, None]
+linecolor = ['green', 'blue', 'red']
+handles = []
+for i, m in enumerate([1000, 1500, 2000]):
+    # Compute the equilibrium state for the system
+    X0, U0 = ct.find_eqpt(
+        cruise, [vref[0], 0], [vref[0], gear[0], theta_hill[0]],
+        iu=[1, 2], y0=[vref[0], 0], iy=[0], params={'m':m})
+
+    t, y = ct.input_output_response(
+        cruise, T, [vref, gear, theta_hill], X0, params={'m':m})
+
+    subplots = simulate_plot(cruise, t, y, t_hill=5, subplots=subplots,
+                           linetype=linecolor[i][0] + '-')
+    handles.append(mlines.Line2D([], [], color=linecolor[i], linestyle='-',
+                                 label="m = %d" % m))
+
+# Labels for plots
+plt.sca(subplots[0])
+plt.ylabel('Speed [m/s]')
+plt.legend(handles=handles, frameon=False, loc='lower right');
+
+plt.sca(subplots[1])
+plt.ylabel('Throttle')
+plt.xlabel('Time [s]');
+
+plt.show()
+
+
 # other than PI controller? 
 # other forces against the car? 
